@@ -1,0 +1,26 @@
+import Vikingos.*
+import Castas.*
+import ExpedicionesYLugares.*
+
+describe "vikingos locos"{
+
+	var miguel = new Soldado(30000,20,jarl)
+	var minasTirith = new Capital(50,1)
+	var losAndesConTincho = new Expedicion()
+
+fixture{
+	losAndesConTincho.agregarLugar(minasTirith)
+	losAndesConTincho.meterALaExpedicion(miguel)
+}
+	
+test "miguel no debe subir porque tiene armas" {
+	assert.throwsExceptionLike(new VikingoNoPuedeSubirExep("Es un jarl con armas"), {miguel.puedeSubirseAExpedicion()})
+}
+	
+test "no vale la pena la ir a los andes"{
+	assert.notThat(losAndesConTincho.valeLaPena())
+	
+}
+
+
+}
