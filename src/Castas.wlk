@@ -1,11 +1,11 @@
 class Rangos{
-	var rangoSuperman
+	var rango
 	constructor(rangoSuperior){
-	rangoSuperman = rangoSuperior
+	rango = rangoSuperior
 	}
 	
-    method rangoSuperior(){
-		return rangoSuperman
+    method evoluconar(){
+		return rango
 	}
 }
 
@@ -14,7 +14,7 @@ object jarl inherits Rangos(karl){}
 object karl inherits Rangos(thrall) {}
 
 object thrall {
-	method rangoSuperior(){
+	method evoluconar(){
 		return self
 	}
 }

@@ -1,33 +1,44 @@
 import Vikingos.*
 
 class Expedicion {
-	var lugaresAExpedicionar = []
-	var participantes = []
+	var objetivos = []
+	var vikingos = []
 	
-
 	method agregarLugar(unLugar){
-		lugaresAExpedicionar += [unLugar] 
+		objetivos.add(unLugar) 
 	}
 	
-	method valeLapena(cantidadDeVikingos){
-		lugaresAExpedicionar.all{unLugar => unLugar.valeLapena()}
+	method valeLaPena(){
+		return objetivos.all{unLugar => unLugar.valeLaPena(vikingos)}
 	}
 	
 	method meterALaExpedicion(unVikingo){
 		unVikingo.puedeSubirseAExpedicion()
-		participantes += [unVikingo]
+		vikingos.add(unVikingo)
+	}
+	
+	method invadirObjetivos(){
+		vikingos.forEach({vikingo => vikingo.recibirOro(self.gananciaPorVikingo(vikingos))})
+		objetivos.forEach({unLugar => unLugar.serInvadido(vikingos)})
+	}
+	method gananciaPorVikingo(vikings){
+		return objetivos.sum({unLugar => unLugar.botin(vikings)}).div(vikings.size())
 	}
 }
 
 class Aldea {
-	var cantidadDeCrucifijos
+	var crucifijos
 	
-	constructor(unaCantidadDeCruci){
-		cantidadDeCrucifijos = unaCantidadDeCruci
+	constructor(unosCrucifijos){crucifijos = unosCrucifijos}
+	
+	method valeLaPena(vikingos){
+		return crucifijos > 14
 	}
-	
-	method valeLaPena(cantidadDeVikingos){
-		return cantidadDeCrucifijos > 14
+	method botin(vikingos){
+		return crucifijos
+	}
+	method serInvadido(vikingos){
+		crucifijos = 0
 	}
 }
 
@@ -37,25 +48,30 @@ class AldeaAmurallada inherits Aldea {
 		vikingosNecesarios = unaCantidadDeVikingos
 	}
 	
-	override method valeLaPena(cantidadDeVikingos){
-		return super(cantidadDeVikingos) && cantidadDeVikingos >= vikingosNecesarios
+	override method valeLaPena(vikingos){
+		return super(vikingos) && vikingos.size() >= vikingosNecesarios
 	}
 }
 
 class Capital {
-	var defensoresIngleses
+	var defensores
 	var factorDeRiqueza
 	constructor(unaCantidadDeDefensores, unFactor){
-		defensoresIngleses = unaCantidadDeDefensores
+		defensores = unaCantidadDeDefensores
 		factorDeRiqueza = unFactor
 	}
 	
-	method valeLaPena(cantidadDeVikingos){
-		return self.botin(cantidadDeVikingos) + factorDeRiqueza >= cantidadDeVikingos * 3
+	method valeLaPena(vikingos){
+		return self.botin(vikingos) + factorDeRiqueza >= vikingos.size() * 3
 	}
 	
-	method botin(cantidadDeVikingos){
-		if(cantidadDeVikingos > defensoresIngleses) return defensoresIngleses
-		else return cantidadDeVikingos
+	method botin(vikingos){
+		if(vikingos.size() > defensores) return defensores
+		else return vikingos.size()
 	}
+	
+	method serInvadido(vikingos){
+		defensores -= vikingos.size()
+	}
+	
 }

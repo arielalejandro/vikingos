@@ -4,23 +4,42 @@ import ExpedicionesYLugares.*
 
 describe "vikingos locos"{
 
-	var miguel = new Soldado(30000,20,jarl)
-	var minasTirith = new Capital(50,1)
+	const miguel = new Soldado(0,30000,20,jarl)
+	const roberto = new Soldado(0,30,15,karl)
+	const alberto = new Granjero(0,4,2,jarl)
+	var ragnar = new Soldado(20,12,11,karl)
+	var minasTirith = new Capital(3,1)
+	var aldeaEscondida = new Aldea(200)
 	var losAndesConTincho = new Expedicion()
-
+	
 fixture{
 	losAndesConTincho.agregarLugar(minasTirith)
-	losAndesConTincho.meterALaExpedicion(miguel)
+	losAndesConTincho.agregarLugar(aldeaEscondida)
+	losAndesConTincho.meterALaExpedicion(roberto)
+}	
+
+method agregarOtro(){
+	losAndesConTincho.meterALaExpedicion(roberto)
 }
-	
 test "miguel no debe subir porque tiene armas" {
 	assert.throwsExceptionLike(new VikingoNoPuedeSubirExep("Es un jarl con armas"), {miguel.puedeSubirseAExpedicion()})
-}
-	
+}	
 test "no vale la pena la ir a los andes"{
 	assert.notThat(losAndesConTincho.valeLaPena())
-	
 }
-
+test "roberto recibe 201 monedas de oro por la expedicion estando el solo"{
+	losAndesConTincho.invadirObjetivos()
+	assert.equals(201,roberto.oro())
+}
+test "alberto y roberto van a la expedicion y reciben 101 de oro cada uno"{
+	losAndesConTincho.meterALaExpedicion(alberto)
+	losAndesConTincho.invadirObjetivos()	
+	assert.equals(101,roberto.oro())
+	assert.equals(101,alberto.oro())
+}
+test "ragnar asciende a thrall"{
+	ragnar.ascenderEscala()
+	assert.equals(thrall,ragnar.castaSocial())
+}
 
 }
